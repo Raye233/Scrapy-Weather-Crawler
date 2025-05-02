@@ -1,4 +1,7 @@
 from os import write
+
+import numpy as np
+import pandas as pd
 import requests
 from lxml import etree
 from headers import *
@@ -48,9 +51,9 @@ def get_weather_info():
     temperature_rule = "//div[@class='weatherbox']//dl[@class='weather_info']//dd[@class='weather']/span/text()"
     humidity_rule = "//div[@class='weatherbox']//dl[@class='weather_info']//dd[@class='shidu']//b//text()"
     air_rule = "//div[@class='weatherbox']//dl[@class='weather_info']//dd[@class='kongqi']//text()"
-    csv_file = open("weather_data1.csv", "w", newline='', encoding='utf-8')
+    csv_file = open("recent_7days.csv", "w", newline='', encoding='utf-8')
     writer = csv.writer(csv_file)
-    writer.writerow(['时间', '最低温度/℃', '最高温度/℃', '湿度/%', '风向', '风力', '紫外线', '空气质量'])
+    writer.writerow(['时间', '最低温度', '最高温度', '湿度', '风向', '风力', '紫外线', '空气质量'])
     for each in get_city_url()[0: 3]:  # 前三个链接相同规则，后四个另一个规则
         content = session.get(each, headers=headers)
         content.encoding = 'utf-8'
@@ -97,3 +100,11 @@ def get_weather_info():
 
 if __name__ == '__main__':
     get_weather_info()
+    filepath = r'F:\Rayedata2\weather_crawl\weather_predict\recent_7days.csv'
+    features = pd.read_csv(filepath, encoding='utf-8')
+    features['时间'] = pd.to_datetime(features['时间'], format='%Y年%m月%d日').dt.strftime('%Y/%m/%d')
+    column_name = '空气质量'
+
+    # 替换0值为1到10之间的随机数
+    features[column_name] = features[column_name].apply(lambda x: np.random.randint(1, 11) if x == 0 else x)
+    features.to_csv(filepath, index=False)

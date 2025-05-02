@@ -33,8 +33,8 @@ class year3_WeatherSpider(scrapy.Spider):
         search_city = '北京'
         pinyin = self.p.get_pinyin(search_city, '')
         front_url = 'https://www.tianqi.com/'
-        start_date = datetime(2023, 8, 28)
-        end_date = datetime(2023, 11, 8)
+        start_date = datetime(2015, 1, 1)
+        end_date = datetime(2025, 1, 1)
         current_date = start_date
         num = 0
         limit = 0

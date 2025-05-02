@@ -12,12 +12,15 @@ BOT_NAME = "weather_project"
 SPIDER_MODULES = ["weather_project.spiders"]
 NEWSPIDER_MODULE = "weather_project.spiders"
 
-
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "weather_project (+http://www.yourdomain.com)"
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+# 启用调试日志并输出到文件
+LOG_LEVEL = 'DEBUG'
+LOG_FILE = 'scrapy_debug.log'
+DOWNLOADER_DEBUG = True  # 显示请求头等详细信息
+ROBOTSTXT_OBEY = False   # 确认关闭robots.txt检查
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 CONCURRENT_REQUESTS = 4
@@ -47,9 +50,9 @@ DEFAULT_REQUEST_HEADERS = {
 }
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
+# SPIDER_MIDDLEWARES = {
 #    "weather_project.middlewares.WeatherProjectSpiderMiddleware": 543,
-#}
+# }
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
@@ -66,8 +69,9 @@ DEFAULT_REQUEST_HEADERS = {
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    # 'weather_project.pipelines.day7_WeatherPipeline': 300,
+    'weather_project.pipelines.day7_WeatherPipeline': 300,
     'weather_project.pipelines.year3_WeatherPipeline': 400,
+    'weather_project.pipelines.year5_WeatherPipeline': 500,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -92,6 +96,27 @@ ITEM_PIPELINES = {
 #HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"
 
 # Set settings whose default value is deprecated to a future-proof value
-REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
+# REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
+REQUEST_FINGERPRINTER_CLASS = "scrapy.utils.request.RequestFingerprinter"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
+
+
 FEED_EXPORT_ENCODING = "utf-8"
+
+# settings.py
+import random
+from .proxy import proxy_pool
+
+
+def get_random_proxy():
+    return random.choice(proxy_pool)
+
+
+# # 设置代理
+# HTTP_PROXY = random.choice(proxy_pool)  # 替换为你的代理IP
+
+# 启用中间件
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
+    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
+}

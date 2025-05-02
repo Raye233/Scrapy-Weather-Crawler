@@ -1,13 +1,13 @@
-import re
+import chardet
+import pandas as pd
 
-# 示例字符串
-text = "这里有一些数字 123, -456.789, 0.123, -0.456, 和一些非数字 字符串abc123"
+def detect_encoding(file_path):
+    with open(file_path, 'rb') as f:
+        result = chardet.detect(f.read())
+    return result['encoding']
 
-# 正则表达式模式
-pattern = r'[-+]?\d*\.?\d+'
-
-# 查找所有匹配的数字
-numbers = re.findall(pattern, text)
-
-# 打印结果
-print(numbers)
+file_path = r'F:\Rayedata2\weather_crawl\combined_file.csv'
+encoding = detect_encoding(file_path)
+df = pd.read_csv(file_path, encoding=encoding)
+print(df)
+print(detect_encoding(file_path))

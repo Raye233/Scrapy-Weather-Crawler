@@ -1,3 +1,5 @@
+from re import search
+
 import scrapy
 import re
 from lxml import etree
@@ -30,9 +32,11 @@ class day7_WeatherSpider(scrapy.Spider):
         self.p = Pinyin()
         self.week = 7
         self.interrupt = 3
+        self.city_name = kwargs.get('city_name')
 
     def start_requests(self):
-        search_city = '北京'
+        print("== 爬虫开始请求 ==")
+        search_city = self.city_name
         pinyin = self.p.get_pinyin(search_city, '')
         front_url = 'https://www.tianqi.com/'
         com_url = f"{front_url}{pinyin}/7/"
@@ -44,7 +48,7 @@ class day7_WeatherSpider(scrapy.Spider):
         # print(response.text)  # 正常
         html_string = etree.HTML(response.text)
         # urls = response.xpath("//body//div[@class='inleft']//ul//a[contains(@title, '北京')]//@href").getall()
-        urls = html_string.xpath("//body//div[@class='inleft']//ul//a[contains(@title, '北京')]//@href")
+        urls = html_string.xpath(f"//body//div[@class='inleft']//ul//a[contains(@title, '{self.city_name}')]//@href")
         new_urls = [response.urljoin(url) for url in urls]
         # print(new_urls)
         for url in new_urls[:self.interrupt]:
