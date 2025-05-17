@@ -1,0 +1,5 @@
+爬取https://www.tianqi.com/的天气信息
+对爬取数据进行统计性分析和时间序列分析
+利用Pytorch和tensorflow进行模型的训练并能够进行预测
+tensorflow实现dnn网络，Pytorch实现lstm网络
+所有功能集成到PyQt-SiliConUI
