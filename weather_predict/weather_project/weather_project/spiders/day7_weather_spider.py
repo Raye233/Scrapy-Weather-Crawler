@@ -1,15 +1,9 @@
-from re import search
-
 import scrapy
 import re
 from lxml import etree
-from scrapy import Spider
-from twisted.internet.defer import Deferred
-import os
 from ..items import day7_WeatherItem
 from xpinyin import Pinyin
-import subprocess
-from datetime import datetime, timedelta
+
 
 # 正则表达式模式
 pattern1 = r'[-+]?\d*\.?\d+'
@@ -24,6 +18,11 @@ air_quality_pattern = re.compile(r'空气质量：(.+)')
 
 class day7_WeatherSpider(scrapy.Spider):
     name = 'day7_weather'
+    custom_settings = {
+        'ITEM_PIPELINES': {
+            'weather_project.pipelines.day7_WeatherPipeline': 300,
+        }
+    }
     allowed_domains = ['tianqi.com']
     start_urls = ['https://www.tianqi.com/']
 

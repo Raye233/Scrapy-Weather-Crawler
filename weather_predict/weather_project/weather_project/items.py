@@ -15,7 +15,7 @@ class day7_WeatherItem(scrapy.Item):
     紫外线 = scrapy.Field()
     空气质量 = scrapy.Field()
 
-class year3_WeatherItem(scrapy.Item):
+class recent5_WeatherItem(scrapy.Item):
     时间 = scrapy.Field()
     最低温度 = scrapy.Field()
     最高温度 = scrapy.Field()

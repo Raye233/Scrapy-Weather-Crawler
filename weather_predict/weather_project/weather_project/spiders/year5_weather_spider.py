@@ -1,3 +1,6 @@
+import random
+import threading
+
 import scrapy
 import re
 from lxml import etree
@@ -11,7 +14,6 @@ from datetime import datetime, timedelta
 import time
 from ..settings import get_random_proxy
 
-
 pattern1 = r'[-+]?\d*\.?\d+'
 pattern2 = r'(?<=，).+?(?=。)'
 pattern3 = r":(.*)"
@@ -20,10 +22,19 @@ wind_direction_pattern = re.compile(r'风向：(.+?)(?=级)')
 wind_level_pattern = re.compile(r'(\d+)级')
 Urays_pattern = re.compile(r'紫外线：(.+)')
 air_quality_pattern = re.compile(r'空气质量：(.+)')
-HTTP_PROXY = get_random_proxy()
+
+
+# HTTP_PROXY = get_random_proxy()
 
 class year5_WeatherSpider(scrapy.Spider):
     name = 'year5_weather'
+    custom_settings = {
+        'ITEM_PIPELINES': {
+            'weather_project.pipelines.year5_WeatherPipeline': 500,
+        },
+        'CONCURRENT_REQUESTS': 1,
+        'DOWNLOAD_DELAY': 15,
+    }
     allowed_domains = ['tianqi.com']
     start_urls = ['https://www.tianqi.com/']
 
@@ -33,11 +44,11 @@ class year5_WeatherSpider(scrapy.Spider):
 
     def start_requests(self):
         global HTTP_PROXY
-        search_city = '北京'
+        search_city = '武汉'
         pinyin = self.p.get_pinyin(search_city, '')
         front_url = 'https://www.tianqi.com/'
-        start_date = datetime(2021, 12, 3)
-        end_date = datetime(2021, 12, 16)
+        start_date = datetime(2023, 8, 26)
+        end_date = datetime(2023, 8, 28)
         current_date = start_date
         num = 0
         limit = 0
@@ -49,16 +60,15 @@ class year5_WeatherSpider(scrapy.Spider):
             limit += 1
             print("已抓取{}天数据".format(num))
             print("limit值为{}".format(limit))
-            if limit % 10 == 0:
-                time.sleep(5)
             if limit % 20 == 0:
                 time.sleep(10)
-            if limit == 60:
+            if limit == 260:
                 limit = 0
-                time.sleep(5)
-                HTTP_PROXY = get_random_proxy()
-            yield scrapy.Request(url=com_url, callback=self.five_years_parse_weather_info, meta={'proxy': HTTP_PROXY})
-            # yield scrapy.Request(url=com_url, callback=self.five_years_parse_weather_info)
+                time.sleep(120)
+                # HTTP_PROXY = get_random_proxy()
+            # yield scrapy.Request(url=com_url, callback=self.five_years_parse_weather_info, meta={'proxy': HTTP_PROXY})
+            yield scrapy.Request(url=com_url, callback=self.five_years_parse_weather_info)
+            # print(f"Using proxy: {HTTP_PROXY}")
             current_date += timedelta(days=1)
 
     def five_years_parse_weather_info(self, response):

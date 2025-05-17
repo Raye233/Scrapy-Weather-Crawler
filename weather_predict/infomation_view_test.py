@@ -18,50 +18,53 @@ def create_blank_charts(parent):
     container = QWidget(parent)
     layout = QVBoxLayout(container)
     # 创建图表
-    fig, axs = plt.subplots(7, 1, figsize=(12, 80), constrained_layout=True)
+    # fig, axs = plt.subplots(7, 1, figsize=(12, 80), constrained_layout=True)
 
-    # ==1== 一日的最低温
-    axs[0].set_xlabel('')
-    axs[0].set_ylabel('Low_Temperature')
-    axs[0].set_title('最低温度')
+    # # ==1== 一日的最低温
+    # axs[0].set_xlabel('')
+    # axs[0].set_ylabel('Low_Temperature')
+    # axs[0].set_title('最低温度')
+    #
+    # # ==2== 一日的最高温
+    # axs[1].set_xlabel('')
+    # axs[1].set_ylabel('High_Temperature')
+    # axs[1].set_title('最高温度')
+    #
+    # # ==3== 湿度
+    # axs[2].set_xlabel('')
+    # axs[2].set_ylabel('Humidity')
+    # axs[2].set_title('湿度')
+    #
+    # # ==4== 风向柱状图实例
+    # axs[3].set_xlabel('风向')
+    # axs[3].set_ylabel('天数')
+    # axs[3].set_title('风向分布')
+    #
+    # # ==5== 风力柱状图
+    # axs[4].set_xlabel('风力等级')
+    # axs[4].set_ylabel('天数')
+    # axs[4].set_title('风力分布')
+    #
+    # # ==6== 紫外线柱状图
+    # axs[5].set_xlabel('紫外线强度')
+    # axs[5].set_ylabel('天数')
+    # axs[5].set_title('紫外线分布')
+    #
+    # # ==7== 空气质量
+    # axs[6].set_xlabel('')
+    # axs[6].set_ylabel('Air_Quality')
+    # axs[6].set_title('空气质量')
 
-    # ==2== 一日的最高温
-    axs[1].set_xlabel('')
-    axs[1].set_ylabel('High_Temperature')
-    axs[1].set_title('最高温度')
+    # plt.subplots_adjust(
+    #     left=0.08,  # 左边距
+    #     right=0.95,  # 右边距
+    #     hspace=0.8  # 子图垂直间距
+    # )
 
-    # ==3== 湿度
-    axs[2].set_xlabel('')
-    axs[2].set_ylabel('Humidity')
-    axs[2].set_title('湿度')
-
-    # ==4== 风向柱状图实例
-    axs[3].set_xlabel('风向')
-    axs[3].set_ylabel('天数')
-    axs[3].set_title('风向分布')
-
-    # ==5== 风力柱状图
-    axs[4].set_xlabel('风力等级')
-    axs[4].set_ylabel('天数')
-    axs[4].set_title('风力分布')
-
-    # ==6== 紫外线柱状图
-    axs[5].set_xlabel('紫外线强度')
-    axs[5].set_ylabel('天数')
-    axs[5].set_title('紫外线分布')
-
-    # ==7== 空气质量
-    axs[6].set_xlabel('')
-    axs[6].set_ylabel('Air_Quality')
-    axs[6].set_title('空气质量')
-
-    plt.subplots_adjust(
-        left=0.08,  # 左边距
-        right=0.95,  # 右边距
-        hspace=0.8  # 子图垂直间距
-    )
-
-    canvas = FigureCanvas(fig)
+    canvas = FigureCanvas(plt.figure())
+    plt.text(0.45, 0.9, "图表将在此处显示", fontsize=24, color='black', ha='center', va='center')
+    plt.axis('off')
+    # canvas = FigureCanvas(fig)
     layout.addWidget(canvas)
 
     return container

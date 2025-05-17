@@ -162,6 +162,8 @@ class TrainWidgets(SiPage):
         # 如果用户选择了文件，将路径显示在文本框中
         if file_path:
             self.linear_edit_box.setText(file_path)
+            global filepath
+            filepath = file_path
 
     def start_model_training(self):
         self.train_button.setEnabled(False)
